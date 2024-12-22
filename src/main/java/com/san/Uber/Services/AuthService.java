@@ -5,7 +5,7 @@ import com.san.Uber.Dto.SignupDto;
 import com.san.Uber.Dto.UserDto;
 import org.springframework.stereotype.Service;
 
-@Service
+
 public interface AuthService {
     String login (String email , String passwrod);
     UserDto signup(SignupDto signupDto);
