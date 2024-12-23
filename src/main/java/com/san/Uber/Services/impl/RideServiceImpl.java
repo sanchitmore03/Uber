@@ -29,13 +29,11 @@ public class RideServiceImpl implements RideService
 
     @Override
     public Ride getRideById(Long rideId) {
-        return null;
+        return rideRepo.findById(rideId).orElseThrow(() ->
+                new RuntimeException("ride id not found.."));
     }
 
-    @Override
-    public void matchWithDrivers(RideRequestDto rideRequestDto) {
 
-    }
 
     @Override
     public Ride createNewRide(RideRequest rideRequest, Driver driver) {
@@ -53,8 +51,10 @@ public class RideServiceImpl implements RideService
 
 
     @Override
-    public Ride updateRideStatus(Long rideId, RideStatus rideStatus) {
-        return null;
+    public Ride updateRideStatus(Ride ride, RideStatus rideStatus) {
+        ride.setRideStatus(rideStatus);
+       return rideRepo.save(ride);
+
     }
 
     @Override

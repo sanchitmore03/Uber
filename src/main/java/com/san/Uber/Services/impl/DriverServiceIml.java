@@ -12,10 +12,12 @@ import com.san.Uber.entities.Driver;
 import com.san.Uber.entities.Ride;
 import com.san.Uber.entities.RideRequest;
 import com.san.Uber.entities.enums.RideRequestStatus;
+import com.san.Uber.entities.enums.RideStatus;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -48,20 +50,37 @@ public class DriverServiceIml implements DriverService {
             throw new IllegalStateException("Driver cannot accept the ride due to unavailability.");
         }
 
-        System.out.println("imple ride dto"+rideRequest);
-        System.out.println("current driver" + currentDriver);
+
+        currentDriver.setAvailable(false);
+       Driver savedDriver = driverRepo.save(currentDriver);
 
         // Create the new ride
-        Ride ride = rideService.createNewRide(rideRequest, currentDriver);
-        System.out.println("ride"+ ride);
+        Ride ride = rideService.createNewRide(rideRequest, savedDriver);
+
 
         // Return the mapped DTO
         return modelMapper.map(ride, RideDto.class);
     }
 
     @Override
-    public RideDto startRide(Long rideId) {
-        return null;
+    public RideDto startRide(Long rideId , String otp) {
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+        if(!driver.equals(ride.getDriver())){
+            throw new RuntimeException("driver cannot start ride as he not accepted ride ");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.CONFIRMED)){
+            throw new RuntimeException("Ride status is not confirmed as hence cannot started:"+ride.getRideStatus());
+        }
+
+        if(!otp.equals(ride.getOtp())){
+            throw new RuntimeException("otp is not valid "+otp);
+        }
+        ride.setStartedAt(LocalDateTime.now());
+        Ride savedRide  =rideService.updateRideStatus(ride,RideStatus.ONGOING);
+
+        return modelMapper.map(savedRide,RideDto.class);
     }
 
     @Override
