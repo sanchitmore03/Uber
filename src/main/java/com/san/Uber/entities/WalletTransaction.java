@@ -4,7 +4,6 @@ import com.san.Uber.entities.enums.TransactionMethod;
 import com.san.Uber.entities.enums.TranscationType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 

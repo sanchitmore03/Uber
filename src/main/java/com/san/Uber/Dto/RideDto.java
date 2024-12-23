@@ -3,17 +3,17 @@ package com.san.Uber.Dto;
 
 import com.san.Uber.entities.enums.PayementMethod;
 import com.san.Uber.entities.enums.RideStatus;
-
+import lombok.Data;
 import org.locationtech.jts.geom.Point;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 
+@Data
 public class RideDto {
     private Long id;
 
-    private org.geolatte.geom.Point pickupLocation;
-    private Point dropOffLocation;
+    private PointDto pickupLocation;
+    private PointDto dropOffLocation;
 
     private LocalDateTime createdTime;
 

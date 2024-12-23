@@ -1,13 +1,11 @@
 package com.san.Uber.Dto;
 
-import com.san.Uber.entities.Rider;
 import com.san.Uber.entities.enums.PayementMethod;
 import com.san.Uber.entities.enums.RideRequestStatus;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,6 +24,7 @@ public class RideRequestDto {
 
     private RiderDto rider;
 
+    private Double fare;
 
     private PayementMethod payementMethod;
 

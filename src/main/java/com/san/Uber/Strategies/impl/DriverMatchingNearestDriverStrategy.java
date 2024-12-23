@@ -1,6 +1,5 @@
 package com.san.Uber.Strategies.impl;
 
-import com.san.Uber.Dto.RideRequestDto;
 import com.san.Uber.Repositories.DriverRepo;
 import com.san.Uber.Strategies.DriverMatchingStrategy;
 import com.san.Uber.entities.Driver;
