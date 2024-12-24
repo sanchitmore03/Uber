@@ -1,10 +1,9 @@
 package com.san.Uber.Dto;
 
 
-import com.san.Uber.entities.enums.PayementMethod;
+import com.san.Uber.entities.enums.PaymentMethod;
 import com.san.Uber.entities.enums.RideStatus;
 import lombok.Data;
-import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +21,7 @@ public class RideDto {
 
     private String otp;
 
-    private PayementMethod payementMethod;
+    private PaymentMethod paymentMethod;
 
     private RideStatus rideStatus;
 

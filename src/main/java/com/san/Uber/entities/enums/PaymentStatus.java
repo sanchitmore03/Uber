@@ -1,5 +1,5 @@
 package com.san.Uber.entities.enums;
 
-public enum PayementStatus {
+public enum PaymentStatus {
     PENDING,CONFIRMED,REFUNDED
 }

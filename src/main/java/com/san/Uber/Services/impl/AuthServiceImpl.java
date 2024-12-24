@@ -6,6 +6,7 @@ import com.san.Uber.Dto.UserDto;
 import com.san.Uber.Repositories.UserRepo;
 import com.san.Uber.Services.AuthService;
 import com.san.Uber.Services.RiderService;
+import com.san.Uber.Services.WalletService;
 import com.san.Uber.entities.User;
 import com.san.Uber.entities.enums.Role;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
     private final UserRepo userRepo;
     private final RiderService riderService;
+    private final WalletService walletService;
 
     @Override
     public String login(String email, String passwrod) {
@@ -42,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
         User savedUser = userRepo.save(mappedUser);
         // create user related entities
         riderService.createNewRider(savedUser);
-
+        walletService.createNewWallet(savedUser);
         return modelMapper.map(savedUser, UserDto.class);
     }
 

@@ -1,5 +1,5 @@
 package com.san.Uber.entities.enums;
 
-public enum PayementMethod {
+public enum PaymentMethod {
     CASH , WALLET
 }

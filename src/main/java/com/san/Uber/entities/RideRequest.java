@@ -1,6 +1,6 @@
 package com.san.Uber.entities;
 
-import com.san.Uber.entities.enums.PayementMethod;
+import com.san.Uber.entities.enums.PaymentMethod;
 import com.san.Uber.entities.enums.RideRequestStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class RideRequest {
     private Rider rider;
 
     @Enumerated(EnumType.STRING)
-    private PayementMethod payementMethod;
+    private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     private RideRequestStatus rideRequestStatus;

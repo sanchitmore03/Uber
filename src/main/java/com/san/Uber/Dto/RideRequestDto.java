@@ -1,6 +1,6 @@
 package com.san.Uber.Dto;
 
-import com.san.Uber.entities.enums.PayementMethod;
+import com.san.Uber.entities.enums.PaymentMethod;
 import com.san.Uber.entities.enums.RideRequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +26,7 @@ public class RideRequestDto {
 
     private Double fare;
 
-    private PayementMethod payementMethod;
+    private PaymentMethod paymentMethod;
 
 
     private RideRequestStatus rideRequestStatus;

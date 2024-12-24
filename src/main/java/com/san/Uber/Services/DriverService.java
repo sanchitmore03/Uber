@@ -4,6 +4,8 @@ import com.san.Uber.Dto.DriverDto;
 import com.san.Uber.Dto.RideDto;
 import com.san.Uber.Dto.RiderDto;
 import com.san.Uber.entities.Driver;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -14,9 +16,11 @@ public interface DriverService {
     RideDto endRide(Long rideId);
     RiderDto rateRider(Long rideId,Integer rating);
     DriverDto getMyProfile();
-    List<RideDto> getAllMyrides();
+    Page<RideDto> getAllMyrides(PageRequest pageRequest);
 
     Driver getCurrentDriver();
+
+    Driver updateDriverAvailability(Driver driver,boolean available);
 
 
 }
