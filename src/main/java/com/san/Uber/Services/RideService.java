@@ -1,6 +1,5 @@
 package com.san.Uber.Services;
 
-import com.san.Uber.Dto.RideRequestDto;
 import com.san.Uber.entities.Driver;
 import com.san.Uber.entities.Ride;
 import com.san.Uber.entities.RideRequest;

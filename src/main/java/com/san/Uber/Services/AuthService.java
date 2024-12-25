@@ -8,5 +8,5 @@ import com.san.Uber.Dto.UserDto;
 public interface AuthService {
     String login (String email , String passwrod);
     UserDto signup(SignupDto signupDto);
-    DriverDto onboardNewDriver(Long userId);
+    DriverDto onboardNewDriver(Long userId,String vehicleId);
 }

@@ -8,6 +8,7 @@ import com.san.Uber.Exceptions.ResourceNotFoundException;
 import com.san.Uber.Repositories.RideRequestRepo;
 import com.san.Uber.Repositories.RiderRepo;
 import com.san.Uber.Services.DriverService;
+import com.san.Uber.Services.RatingService;
 import com.san.Uber.Services.RideService;
 import com.san.Uber.Services.RiderService;
 import com.san.Uber.Strategies.RideStrategyMangaer;
@@ -39,6 +40,7 @@ public class RiderServiceImpl implements RiderService {
     private final RideRequestRepo rideRequestRepo;
     private final RideService rideService;
     private final DriverService driverSrvice;
+    private final RatingService ratingService;
 
     @Override
     @Transactional
@@ -80,17 +82,28 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public DriverDto rateDriver(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Rider rider = getCurrentRider();
+
+        if(!rider.equals(ride.getRider())){
+            throw new RuntimeException("rider is not the oner of this ride ... ");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)){
+            throw new RuntimeException("Ride status is not Ended as hence cannot start rating:"+ride.getRideStatus());
+        }
+
+        return ratingService.rateDriver(ride,rating);
     }
 
     @Override
-    public RideDto getMyProfile() {
+    public RiderDto getMyProfile() {
         Rider currentRider = getCurrentRider();
-        return modelMapper.map(currentRider, RideDto.class);
+        return modelMapper.map(currentRider, RiderDto.class);
     }
 
     @Override
-    public Page<RideDto> getAllMyrides(PageRequest pageRequest) {
+    public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
         Rider rider = getCurrentRider();
         return rideService.getAllRidesOfRider(rider,pageRequest).map(
                 ride -> modelMapper.map(ride,RideDto.class)

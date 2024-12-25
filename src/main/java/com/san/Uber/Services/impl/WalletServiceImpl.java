@@ -1,7 +1,5 @@
 package com.san.Uber.Services.impl;
 
-import com.san.Uber.Dto.RiderDto;
-import com.san.Uber.Dto.WalletTransactionDto;
 import com.san.Uber.Repositories.WalletRepository;
 import com.san.Uber.Services.WalletService;
 import com.san.Uber.Services.WalletTranscationService;

@@ -5,10 +5,7 @@ import com.san.Uber.Dto.RideDto;
 import com.san.Uber.Dto.RiderDto;
 import com.san.Uber.Exceptions.ResourceNotFoundException;
 import com.san.Uber.Repositories.DriverRepo;
-import com.san.Uber.Services.DriverService;
-import com.san.Uber.Services.PaymentService;
-import com.san.Uber.Services.RideRequestService;
-import com.san.Uber.Services.RideService;
+import com.san.Uber.Services.*;
 import com.san.Uber.entities.Driver;
 import com.san.Uber.entities.Ride;
 import com.san.Uber.entities.RideRequest;
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DriverServiceIml implements DriverService {
@@ -31,6 +27,7 @@ public class DriverServiceIml implements DriverService {
     private final RideService rideService;
     private final ModelMapper modelMapper;
     private final PaymentService paymentService;
+    private final RatingService ratingService;
 
     @Override
     public RideDto cancelRide(Long rideId) {
@@ -99,6 +96,7 @@ public class DriverServiceIml implements DriverService {
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide  =rideService.updateRideStatus(ride,RideStatus.ONGOING);
         paymentService.createNewPayment(savedRide);
+        ratingService.createNewRating(savedRide);
         return modelMapper.map(savedRide,RideDto.class);
     }
 
@@ -125,7 +123,19 @@ public class DriverServiceIml implements DriverService {
 
     @Override
     public RiderDto rateRider(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+
+        if(!driver.equals(ride.getDriver())){
+            throw new RuntimeException("driver is not the oner of this ride ... ");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)){
+            throw new RuntimeException("Ride status is not Ended as hence cannot start rating:"+ride.getRideStatus());
+        }
+
+
+        return ratingService.rateRider(ride,rating);
     }
 
     @Override
@@ -135,7 +145,7 @@ public class DriverServiceIml implements DriverService {
     }
 
     @Override
-    public Page<RideDto> getAllMyrides(PageRequest pageRequest) {
+    public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
         Driver currentDriver = getCurrentDriver();
         return rideService.getAllRidesOfDriver(currentDriver,pageRequest).map(
                 ride -> modelMapper.map(ride,RideDto.class)
@@ -151,6 +161,11 @@ public class DriverServiceIml implements DriverService {
     @Override
     public Driver updateDriverAvailability(Driver driver, boolean available) {
         driver.setAvailable(available);
+        return driverRepo.save(driver);
+    }
+
+    @Override
+    public Driver createNewDriver(Driver driver) {
         return driverRepo.save(driver);
     }
 }
