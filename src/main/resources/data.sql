@@ -121,36 +121,36 @@ INSERT INTO user_roles (user_id, roles) VALUES
                                             (40, 'RIDER'),
                                             (40, 'DRIVER');
 
-INSERT INTO rider (id, user_id, rating) VALUES
-    (1, 1, 4.9);
+INSERT INTO rider ( user_id, rating) VALUES
+    ( 1, 4.9);
 
-INSERT INTO driver (id, user_id, rating, available, current_location) VALUES
-                                                                          (2, 2, 4.7, true, ST_GeomFromText('POINT(73.8567 18.5204)', 4326)),
-                                                                          (3, 3, 4.8, true, ST_GeomFromText('POINT(73.8500 18.5100)', 4326)),
-                                                                          (4, 4, 4.6, true, ST_GeomFromText('POINT(73.8470 18.5070)', 4326)),
-                                                                          (5, 5, 4.9, true, ST_GeomFromText('POINT(73.8400 18.5000)', 4326)),
-                                                                          (6, 6, 4.3, true, ST_GeomFromText('POINT(73.8300 18.4800)', 4326)),
-                                                                          (7, 7, 4.4, true, ST_GeomFromText('POINT(73.8200 18.4900)', 4326)),
-                                                                          (8, 8, 4.5, true, ST_GeomFromText('POINT(73.8100 18.4700)', 4326)),
-                                                                          (9, 9, 4.6, true, ST_GeomFromText('POINT(73.8000 18.4600)', 4326)),
-                                                                          (10, 10, 4.7, true, ST_GeomFromText('POINT(73.8500 18.4500)', 4326)),
-                                                                          (11, 11, 4.8, true, ST_GeomFromText('POINT(73.8600 18.4400)', 4326)),
-                                                                          (12, 12, 4.2, true, ST_GeomFromText('POINT(73.8700 18.4300)', 4326)),
-                                                                          (13, 13, 4.1, true, ST_GeomFromText('POINT(73.8800 18.4200)', 4326)),
-                                                                          (14, 14, 4.0, true, ST_GeomFromText('POINT(73.8900 18.4100)', 4326)),
-                                                                          (15, 15, 4.5, true, ST_GeomFromText('POINT(73.9000 18.4000)', 4326)),
-                                                                          (16, 16, 4.3, true, ST_GeomFromText('POINT(73.9100 18.3900)', 4326)),
-                                                                          (17, 17, 4.6, true, ST_GeomFromText('POINT(73.9200 18.3800)', 4326)),
-                                                                          (18, 18, 4.4, true, ST_GeomFromText('POINT(73.9300 18.3700)', 4326)),
-                                                                          (19, 19, 4.7, true, ST_GeomFromText('POINT(73.9400 18.3600)', 4326)),
-                                                                          (20, 20, 4.8, true, ST_GeomFromText('POINT(73.9500 18.3500)', 4326)),
-                                                                          (21, 21, 4.5, true, ST_GeomFromText('POINT(73.9600 18.3400)', 4326)),
-                                                                          (22, 22, 4.7, true, ST_GeomFromText('POINT(73.9700 18.3300)', 4326)),
-                                                                          (23, 23, 4.8, true, ST_GeomFromText('POINT(73.9800 18.3200)', 4326)),
-                                                                          (24, 24, 4.6, true, ST_GeomFromText('POINT(73.9900 18.3100)', 4326)),
-                                                                          (25, 25, 4.9, true, ST_GeomFromText('POINT(74.0000 18.3000)', 4326)),
-                                                                          (26, 26, 4.3, true, ST_GeomFromText('POINT(74.0100 18.2900)', 4326)),
-                                                                          (27, 27, 4.4, true, ST_GeomFromText('POINT(74.0200 18.2800)', 4326));
-INSERT INTO wallet (id, user_id, balance) VALUES
-                                              (1, 1, 100),
-                                              (2, 2, 500);
+INSERT INTO driver (user_id, rating, available, current_location) VALUES
+                                                                          (2, 4.7, true, ST_GeomFromText('POINT(73.8567 18.5204)', 4326)),
+                                                                          (3, 4.8, true, ST_GeomFromText('POINT(73.8500 18.5100)', 4326)),
+                                                                          (4, 4.6, true, ST_GeomFromText('POINT(73.8470 18.5070)', 4326)),
+                                                                          (5, 4.9, true, ST_GeomFromText('POINT(73.8400 18.5000)', 4326)),
+                                                                          (6, 4.3, true, ST_GeomFromText('POINT(73.8300 18.4800)', 4326)),
+                                                                          (7, 4.4, true, ST_GeomFromText('POINT(73.8200 18.4900)', 4326)),
+                                                                          (8, 4.5, true, ST_GeomFromText('POINT(73.8100 18.4700)', 4326)),
+                                                                          (9, 4.6, true, ST_GeomFromText('POINT(73.8000 18.4600)', 4326)),
+                                                                          (10, 4.7, true, ST_GeomFromText('POINT(73.8500 18.4500)', 4326)),
+                                                                          (11, 4.8, true, ST_GeomFromText('POINT(73.8600 18.4400)', 4326)),
+                                                                          (12, 4.2, true, ST_GeomFromText('POINT(73.8700 18.4300)', 4326)),
+                                                                          (13, 4.1, true, ST_GeomFromText('POINT(73.8800 18.4200)', 4326)),
+                                                                          (14, 4.0, true, ST_GeomFromText('POINT(73.8900 18.4100)', 4326)),
+                                                                          (15, 4.5, true, ST_GeomFromText('POINT(73.9000 18.4000)', 4326)),
+                                                                          (16, 4.3, true, ST_GeomFromText('POINT(73.9100 18.3900)', 4326)),
+                                                                          (17, 4.6, true, ST_GeomFromText('POINT(73.9200 18.3800)', 4326)),
+                                                                          (18, 4.4, true, ST_GeomFromText('POINT(73.9300 18.3700)', 4326)),
+                                                                          (19, 4.7, true, ST_GeomFromText('POINT(73.9400 18.3600)', 4326)),
+                                                                          (20, 4.8, true, ST_GeomFromText('POINT(73.9500 18.3500)', 4326)),
+                                                                          (21, 4.5, true, ST_GeomFromText('POINT(73.9600 18.3400)', 4326)),
+                                                                          (22, 4.7, true, ST_GeomFromText('POINT(73.9700 18.3300)', 4326)),
+                                                                          (23, 4.8, true, ST_GeomFromText('POINT(73.9800 18.3200)', 4326)),
+                                                                          (24, 4.6, true, ST_GeomFromText('POINT(73.9900 18.3100)', 4326)),
+                                                                          (25, 4.9, true, ST_GeomFromText('POINT(74.0000 18.3000)', 4326)),
+                                                                          (26, 4.3, true, ST_GeomFromText('POINT(74.0100 18.2900)', 4326)),
+                                                                          (27, 4.4, true, ST_GeomFromText('POINT(74.0200 18.2800)', 4326));
+INSERT INTO wallet ( user_id, balance) VALUES
+                                              (1, 100),
+                                              (2, 500);

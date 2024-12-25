@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ public class RiderServiceImpl implements RiderService {
     private final DriverService driverSrvice;
     private final RatingService ratingService;
 
+
     @Override
     @Transactional
     public RideRequestDto requestRide(RideRequestDto rideRequestDto) {
@@ -52,14 +54,15 @@ public class RiderServiceImpl implements RiderService {
 
         Double fare = rideStrategyMangaer.rideFareClaculationStrategy().fareCalculation(rideRequest);
         rideRequest.setFare(fare);
+        System.out.println("fare is ::"+fare);
 
         RideRequest savedRideRequest = rideRequestRepo.save(rideRequest);
-
-        List<Driver> drivers = rideStrategyMangaer
-                .driverMatchingStrategy(rider.getRating()).findMatchingDriver(rideRequest);
+        System.out.println("hellllll");
+//        List<Driver> drivers = rideStrategyMangaer
+//                .driverMatchingStrategy(rider.getRating()).findMatchingDriver(rideRequest);
 
 //        TODO : Send notification to all the drivers about this ride request
-
+        System.out.println("saved ride request id "+savedRideRequest.getId());
         return modelMapper.map(savedRideRequest, RideRequestDto.class);
     }
 
@@ -122,10 +125,13 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public Rider getCurrentRider() {
-//        TODO : implement Spring security
 
-        return riderRepo.findById(1L).orElseThrow(() -> new ResourceNotFoundException(
-                "Rider not found with id: "+1
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("printing the current user : "+user.getId());
+        Rider getRider = riderRepo.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(
+                "Rider not found with id: "+user.getId()
         ));
+        System.out.println("printing rider id"+getRider.getId());
+ return getRider;
     }
 }

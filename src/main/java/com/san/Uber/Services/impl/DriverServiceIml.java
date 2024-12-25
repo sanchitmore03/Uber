@@ -9,12 +9,14 @@ import com.san.Uber.Services.*;
 import com.san.Uber.entities.Driver;
 import com.san.Uber.entities.Ride;
 import com.san.Uber.entities.RideRequest;
+import com.san.Uber.entities.User;
 import com.san.Uber.entities.enums.RideRequestStatus;
 import com.san.Uber.entities.enums.RideStatus;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,8 +156,10 @@ public class DriverServiceIml implements DriverService {
 
     @Override
     public Driver getCurrentDriver() {
-        return driverRepo.findById(2L).orElseThrow(() ->
-         new ResourceNotFoundException("Driver not found with id "+ 2));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("printing the current user of driver : "+user.getId());
+        return driverRepo.findByUser(user).orElseThrow(() ->
+         new ResourceNotFoundException("Driver not found with id "+ user.getId()));
     }
 
     @Override
