@@ -58,7 +58,13 @@ public class DriverController {
     }
 
 
-
+//    @GetMapping("/availableRides")
+//    public ResponseEntity<Page<RideRequestDto>> getAvailableRideRequests(@RequestParam(defaultValue = "0") Integer pageOffset,
+//                                                                         @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+//        PageRequest pageRequest = PageRequest.of(pageOffset, pageSize,
+//                Sort.by(Sort.Direction.DESC, "createdTime", "id"));
+//        return ResponseEntity.ok(driverService.getAvailableRideRequests(pageRequest));
+//    }
 
 
 

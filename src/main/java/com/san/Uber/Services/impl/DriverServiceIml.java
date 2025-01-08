@@ -2,9 +2,11 @@ package com.san.Uber.Services.impl;
 
 import com.san.Uber.Dto.DriverDto;
 import com.san.Uber.Dto.RideDto;
+import com.san.Uber.Dto.RideRequestDto;
 import com.san.Uber.Dto.RiderDto;
 import com.san.Uber.Exceptions.ResourceNotFoundException;
 import com.san.Uber.Repositories.DriverRepo;
+import com.san.Uber.Repositories.RideRequestRepo;
 import com.san.Uber.Services.*;
 import com.san.Uber.entities.Driver;
 import com.san.Uber.entities.Ride;
@@ -30,6 +32,7 @@ public class DriverServiceIml implements DriverService {
     private final ModelMapper modelMapper;
     private final PaymentService paymentService;
     private final RatingService ratingService;
+    private final RideRequestRepo rideRequestRepo;
 
     @Override
     public RideDto cancelRide(Long rideId) {
@@ -172,4 +175,6 @@ public class DriverServiceIml implements DriverService {
     public Driver createNewDriver(Driver driver) {
         return driverRepo.save(driver);
     }
+
+
 }

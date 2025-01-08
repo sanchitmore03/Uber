@@ -2,6 +2,7 @@ package com.san.Uber.Services;
 
 import com.san.Uber.Dto.DriverDto;
 import com.san.Uber.Dto.RideDto;
+import com.san.Uber.Dto.RideRequestDto;
 import com.san.Uber.Dto.RiderDto;
 import com.san.Uber.entities.Driver;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ public interface DriverService {
     Driver updateDriverAvailability(Driver driver,boolean available);
 
     Driver createNewDriver(Driver driver);
+
 
 
 }

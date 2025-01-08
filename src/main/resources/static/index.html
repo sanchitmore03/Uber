@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css">
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -23,6 +25,7 @@
         <div class="auth-buttons">
             <button class="login-btn">Login</button>
             <button class="signup-btn">Sign Up</button>
+            <button class="become-driver-btn" style="display: none;">Become a Driver</button>
         </div>
     </nav>
 
@@ -58,6 +61,36 @@
             </div>
         </section>
     </main>
+
+    <section id="driverDashboard" class="dashboard" style="display: none;">
+        <div class="dashboard-content">
+            <h2>Driver Dashboard</h2>
+            <div class="ride-requests-container">
+                <h3>Available Ride Requests</h3>
+                <div id="availableRides" class="ride-list"></div>
+            </div>
+            <div id="map" class="map-container"></div>
+            <div id="activeRide" class="active-ride" style="display: none;">
+                <h3>Current Ride</h3>
+                <div class="ride-details"></div>
+                <button id="startRideBtn" class="action-btn">Start Ride</button>
+                <button id="completeRideBtn" class="action-btn">Complete Ride</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="rideStatus" class="ride-status" style="display: none;">
+        <div class="status-content">
+            <h3>Finding Driver...</h3>
+            <div class="loader"></div>
+            <div id="driverInfo" style="display: none;">
+                <h4>Driver Details</h4>
+                <p id="driverName"></p>
+                <p id="estimatedTime"></p>
+            </div>
+            <div id="rideMap" class="map-container"></div>
+        </div>
+    </div>
 
     <div id="loginModal" class="modal">
         <div class="modal-content">
@@ -97,6 +130,30 @@
                     </select>
                 </div>
                 <button type="submit" class="submit-btn">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="driverRegistrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Register as Driver</h2>
+            <form id="driverRegistrationForm">
+                <div class="form-group">
+                    <input type="text" id="vehicleNumber" placeholder="Vehicle Number" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="vehicleModel" placeholder="Vehicle Model" required>
+                </div>
+                <div class="form-group">
+                    <select id="vehicleType" required>
+                        <option value="">Select Vehicle Type</option>
+                        <option value="SEDAN">Sedan</option>
+                        <option value="SUV">SUV</option>
+                        <option value="HATCHBACK">Hatchback</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Register as Driver</button>
             </form>
         </div>
     </div>

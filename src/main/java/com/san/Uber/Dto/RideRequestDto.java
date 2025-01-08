@@ -14,13 +14,11 @@ import java.time.LocalDateTime;
 public class RideRequestDto {
     private Long id;
 
+    private Location pickupLocation;
 
-    private PointDto pickupLocation;
-
-    private PointDto dropOffLocation;
+    private Location dropOffLocation;
 
     private LocalDateTime requestedTime;
-
 
     private RiderDto rider;
 
@@ -28,6 +26,13 @@ public class RideRequestDto {
 
     private PaymentMethod paymentMethod;
 
-
     private RideRequestStatus rideRequestStatus;
+
+
+
+    public static class Location {
+        private String type;
+        private double[] coordinates;
+        private String address;
+    }
 }

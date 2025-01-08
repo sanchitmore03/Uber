@@ -35,7 +35,9 @@ public class WebSecurityConfig {
         "/favicon.ico",
         "/auth/test",
         "/auth/signup",
-        "/auth/login"
+        "/auth/login",
+        "/riders/**",
+        "/drivers/**"
     };
 
     @Bean
