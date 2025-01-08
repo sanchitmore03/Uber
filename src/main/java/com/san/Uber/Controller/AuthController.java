@@ -59,5 +59,8 @@ public class AuthController {
         return ResponseEntity.ok(new LoginResponseDto(accessToken));
     }
 
-
+    @GetMapping("/test")
+    public ResponseEntity<String> testConnection() {
+        return ResponseEntity.ok("Backend connection successful");
+    }
 }
