@@ -38,14 +38,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(signupData)
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            const data = await response.json();
+            console.log('Signup response:', data); // Debug log
+
+            if (response.ok && data.data) {
                 alert('Signup successful! Please login.');
                 signupModal.style.display = "none";
                 loginModal.style.display = "block";
+                
+                // Clear the signup form
+                document.getElementById('signupForm').reset();
             } else {
-                const error = await response.json();
-                alert(error.message || 'Signup failed');
+                console.error('Signup error:', data);
+                alert(data.error?.message || 'Signup failed. Please try again.');
             }
         } catch (error) {
             console.error('Signup error:', error);
@@ -71,24 +76,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(loginData)
             });
 
+            const data = await response.json();
+            console.log('Raw login response:', data); // Debug log to see exact structure
+
             if (response.ok) {
-                const data = await response.json();
-                // Store the access token
-                localStorage.setItem('accessToken', data.accessToken);
+                // Handle LoginResponseDto structure
+                let token = null;
+                
+                // Try different response structures
+                if (data.accessToken) {
+                    token = data.accessToken;
+                } else if (data.data && data.data.accessToken) {
+                    token = data.data.accessToken;
+                } else if (data.token) {
+                    token = data.token;
+                } else if (data.data && data.data.token) {
+                    token = data.data.token;
+                }
+
+                console.log('Extracted token:', token); // Debug log
+
+                if (!token) {
+                    console.error('Response structure:', data);
+                    throw new Error('Token not found in response. Check console for details.');
+                }
+
+                // Store the cleaned token
+                localStorage.setItem('accessToken', token.toString().trim());
                 
                 // Close modal and update UI
                 loginModal.style.display = "none";
                 updateUIAfterLogin();
-                
-                // Redirect based on role if needed
-                // checkUserRoleAndRedirect();
             } else {
-                const error = await response.json();
-                alert(error.message || 'Login failed');
+                // Handle error response
+                const errorMessage = data.error?.message || data.message || 'Login failed';
+                console.error('Login error details:', data);
+                alert(errorMessage);
             }
         } catch (error) {
             console.error('Login error:', error);
-            alert('Login failed. Please try again.');
+            alert('Login failed: ' + error.message);
         }
     });
 
@@ -119,13 +146,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Example of making authenticated API request
     async function makeAuthenticatedRequest(url, options = {}) {
         const token = localStorage.getItem('accessToken');
-        if (!token) {
-            throw new Error('No authentication token found');
+        if (!token || !isValidToken(token)) {
+            localStorage.removeItem('accessToken');
+            alert("Please login again");
+            loginModal.style.display = "block";
+            throw new Error('Invalid or missing token');
         }
 
+        // Remove any whitespace from token
+        const cleanToken = token.trim();
+        
         options.headers = {
             ...options.headers,
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${cleanToken}`
         };
 
         const response = await fetch(url, options);
@@ -252,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem('accessToken')?.trim(); // Add trim here
         if (!token) {
             alert("Please login first");
             loginModal.style.display = "block";
@@ -261,30 +294,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const paymentMethod = document.getElementById('paymentMethod').value;
 
+        // Format request according to your existing RideRequestDto structure
         const rideRequest = {
+            id: null,
             pickupLocation: {
-                coordinates: [currentLocation.lng, currentLocation.lat]  // GeoJSON format: [longitude, latitude]
+                type: "Point",
+                coordinates: [currentLocation.lng, currentLocation.lat]
             },
             dropOffLocation: {
+                type: "Point",
                 coordinates: [selectedDropoffLocation.lng, selectedDropoffLocation.lat]
             },
-            paymentMethod: paymentMethod  // Note: fixed typo in property name
+            requestedTime: new Date().toISOString(),
+            rider: null,  // This will be set by backend
+            fare: null,   // This will be calculated by backend
+            paymentMethod: paymentMethod,
+            rideRequestStatus: "REQUESTED"
         };
 
         try {
-            const response = await fetch('/api/rides/request', {  // Updated endpoint
+            console.log('Token being sent:', token);
+            const response = await fetch('/riders/requestRide', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}` // No need for trim() here since we did it above
                 },
                 body: JSON.stringify(rideRequest)
             });
 
             if (response.ok) {
                 const data = await response.json();
-                alert('Ride requested successfully! A driver will be assigned shortly.');
                 console.log('Ride request response:', data);
+                alert('Ride requested successfully! A driver will be assigned shortly.');
+                
+                // Clear the form
+                document.getElementById('dropoffLocation').value = '';
+                document.getElementById('pickupLocation').value = '';
+                currentLocation = null;
+                selectedDropoffLocation = null;
             } else {
                 const error = await response.json();
                 console.error('Ride request error:', error);
@@ -309,4 +357,95 @@ document.addEventListener('DOMContentLoaded', function() {
             return `${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`;
         }
     }
+
+    // Check if user is already logged in
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+        // Verify token validity
+        verifyToken(token);
+    }
+
+    // Add favicon programmatically
+    addFavicon();
 });
+
+// Add this function to verify token
+async function verifyToken(token) {
+    try {
+        const cleanToken = token.trim(); // Add trim here
+        const response = await fetch('/auth/verify', {
+            headers: {
+                'Authorization': `Bearer ${cleanToken}`
+            }
+        });
+        
+        if (!response.ok) {
+            localStorage.removeItem('accessToken');
+            location.reload();
+        } else {
+            updateUIAfterLogin();
+        }
+    } catch (error) {
+        console.error('Token verification error:', error);
+        localStorage.removeItem('accessToken');
+        location.reload();
+    }
+}
+
+// Add this utility function
+function isValidToken(token) {
+    if (!token) return false;
+    
+    // Check if token has the correct JWT format (three parts separated by dots)
+    const parts = token.split('.');
+    if (parts.length !== 3) return false;
+    
+    return true;
+}
+
+// Add error handling for fetch requests
+function handleResponse(response) {
+    return response.json().then(data => {
+        if (!response.ok) {
+            // If the server returned an error, throw it
+            throw new Error(data.error?.message || 'Network response was not ok');
+        }
+        return data;
+    });
+}
+
+function setLoading(form, isLoading) {
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (isLoading) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Please wait...';
+    } else {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitBtn.getAttribute('data-original-text') || 'Submit';
+    }
+}
+
+// Add this function to create and add favicon
+function addFavicon() {
+    // Base64 encoded small black icon
+    const iconData = 'AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A';
+
+    // Convert base64 to blob
+    const byteCharacters = atob(iconData);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], {type: 'image/x-icon'});
+
+    // Create URL for the blob
+    const iconUrl = URL.createObjectURL(blob);
+
+    // Create or update favicon link
+    let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = iconUrl;
+    document.getElementsByTagName('head')[0].appendChild(link);
+}
